@@ -1,0 +1,16 @@
+[package]
+name = "csh-ldap"
+authors = ["Galen Guyer <galen@galenguyer.com"]
+license = "MIT"
+description = "LDAP bindings for CSH projects"
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/galenguyer/csh-ldap.rs"
+
+[dependencies]
+lazy_static = "1.4.0"
+ldap3 = "0.10.2"
+rand = "0.8.5"
+regex = "1.5.5"
+serde = { version = "1.0.136", features = ["derive"] }
+trust-dns-resolver = "0.21.1"
