@@ -7,19 +7,8 @@ use trust_dns_resolver::{
     AsyncResolver,
 };
 
+use super::search::SearchAttrs;
 use super::user::{LdapUser, LdapUserChangeSet};
-
-const SEARCH_ATTRS: [&str; 9] = [
-    "cn",
-    "dn",
-    "uid",
-    "memberOf",
-    "krbPrincipalName",
-    "mail",
-    "mobile",
-    "ibutton",
-    "drinkBalance",
-];
 
 #[derive(Clone)]
 pub struct LdapClient {
@@ -51,7 +40,7 @@ impl LdapClient {
                 "cn=users,cn=accounts,dc=csh,dc=rit,dc=edu",
                 ldap3::Scope::Subtree,
                 &format!("(|(uid=*{query}*)(cn=*{query}*))"),
-                SEARCH_ATTRS,
+                SearchAttrs::default().finalize(),
             )
             .await
             .unwrap()
@@ -74,7 +63,7 @@ impl LdapClient {
                 "cn=users,cn=accounts,dc=csh,dc=rit,dc=edu",
                 ldap3::Scope::Subtree,
                 "(objectClass=cshMember)",
-                SEARCH_ATTRS,
+                SearchAttrs::default().finalize(),
             )
             .await
             .unwrap()
@@ -98,7 +87,7 @@ impl LdapClient {
                 "cn=users,cn=accounts,dc=csh,dc=rit,dc=edu",
                 ldap3::Scope::Subtree,
                 &format!("uid={uid}"),
-                SEARCH_ATTRS,
+                SearchAttrs::default().finalize(),
             )
             .await
             .unwrap()
@@ -121,7 +110,7 @@ impl LdapClient {
                 "cn=users,cn=accounts,dc=csh,dc=rit,dc=edu",
                 ldap3::Scope::Subtree,
                 &format!("ibutton={ibutton}"),
-                SEARCH_ATTRS,
+                SearchAttrs::default().finalize(),
             )
             .await
             .unwrap()
