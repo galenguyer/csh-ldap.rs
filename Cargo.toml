@@ -3,14 +3,16 @@ name = "csh-ldap"
 authors = ["Galen Guyer <galen@galenguyer.com"]
 license = "MIT"
 description = "LDAP bindings for CSH projects"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 repository = "https://github.com/galenguyer/csh-ldap.rs"
 
 [dependencies]
+async-trait = "0.1.56"
+deadpool = { version = "0.9.5", default-features = false, features = ["async-trait", "managed"] }
 lazy_static = "1.4.0"
-ldap3 = "0.10.2"
+ldap3 = "0.10.5"
 rand = "0.8.5"
-regex = "1.5.5"
-serde = { version = "1.0.136", features = ["derive"] }
-trust-dns-resolver = "0.21.1"
+regex = "1.6.0"
+serde = { version = "1.0.140", features = ["derive"] }
+trust-dns-resolver = "0.21.2"

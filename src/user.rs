@@ -21,6 +21,7 @@ pub struct LdapUser {
 }
 
 impl LdapUser {
+    #[must_use]
     pub fn from_entry(entry: &SearchEntry) -> Self {
         let user_attrs = &entry.attrs;
         LdapUser {
@@ -42,9 +43,13 @@ where
     T: FromStr,
     <T as FromStr>::Err: Debug,
 {
-    entry
-        .get(field)
-        .map(|f| f.get(0).unwrap().parse::<T>().unwrap())
+    match entry.get(field).map(|f| f.get(0).unwrap().parse::<T>()) {
+        Some(result) => match result {
+            Ok(r) => Some(r),
+            Err(_) => None,
+        },
+        None => None,
+    }
 }
 
 fn get_vec<T>(entry: &HashMap<String, Vec<String>>, field: &str) -> Vec<T>
@@ -58,6 +63,7 @@ where
     }
 }
 
+#[must_use]
 pub fn get_groups(member_of: Vec<String>) -> Vec<String> {
     lazy_static! {
         static ref GROUP_REGEX: Regex =

@@ -21,13 +21,14 @@ impl Default for SearchAttrs {
 }
 
 impl SearchAttrs {
-    pub fn new(attrs: Vec<&str>) -> Self {
+    pub fn new(attrs: &[&str]) -> Self {
         SearchAttrs {
-            attrs: attrs.iter().map(|attr| attr.to_string()).collect(),
+            attrs: attrs.iter().map(std::string::ToString::to_string).collect(),
         }
     }
 
     #[allow(clippy::should_implement_trait)]
+    #[must_use]
     pub fn add(mut self, attr: &str) -> Self {
         if !self.attrs.contains(&attr.to_string()) {
             self.attrs.push(attr.to_string());
@@ -35,6 +36,7 @@ impl SearchAttrs {
         self
     }
 
+    #[must_use]
     pub fn remove(mut self, attr: &str) -> Self {
         if attr != "dn" {
             self.attrs.retain(|a| a != attr);
@@ -42,6 +44,7 @@ impl SearchAttrs {
         self
     }
 
+    #[must_use]
     pub fn finalize(self) -> Vec<String> {
         self.attrs
     }
