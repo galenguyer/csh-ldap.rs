@@ -206,7 +206,36 @@ impl LdapClient {
                 HashSet::from([change_set.drinkBalance.unwrap().to_string()]),
             ));
         }
+        if let Some(ib) = &change_set.ibutton {
+            changes.push(Mod::Replace(
+                String::from("ibutton"),
+                HashSet::from_iter(ib.iter().map(|v| v.to_string())),
+            ));
+        }
+
         match ldap.modify(&change_set.dn, changes).await {
+            Ok(_) => {}
+            Err(e) => eprintln!("{:#?}", e),
+        }
+    }
+
+    pub async fn deactivate_user(&mut self, dn: &str) {
+        self.set_user_nslock(dn, true).await
+    }
+    pub async fn activate_user(&mut self, dn: &str) {
+        self.set_user_nslock(dn, false).await
+    }
+
+    async fn set_user_nslock(&mut self, dn: &str, locked: bool) {
+        let mut ldap = self.ldap.get().await.unwrap();
+
+        let mut changes = Vec::new();
+        changes.push(Mod::Replace(
+            String::from("nsAccountLock"),
+            HashSet::from([locked.to_string()]),
+        ));
+
+        match ldap.modify(dn, changes).await {
             Ok(_) => {}
             Err(e) => eprintln!("{:#?}", e),
         }
